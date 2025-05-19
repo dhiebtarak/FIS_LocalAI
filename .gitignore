@@ -1,0 +1,38 @@
+# Python virtual environment
+venv/
+
+# Python cache and compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Logs
+app.log
+
+docker/
+README.md
+
+models/
+
+blobs/
+manifests/
+*.gguf
+id_ed25519
+id_ed25519.pub
+
+# Environment and temporary files
+*.env
+*.log
+*.tmp
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
+.vscode/
+
+test.py 
+
+README.md
+
+flask_session/
