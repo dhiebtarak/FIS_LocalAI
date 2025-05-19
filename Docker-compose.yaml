@@ -22,8 +22,8 @@ services:
               capabilities: [gpu]
 
   backend:
-    image: backend:latest
-    container_name: backend
+    image: tarakdhieb7/fis_localai_backend:latest 
+    container_name: fis_localai_backend:latest 
     build:
       context: .
       dockerfile: Dockerfile
@@ -32,15 +32,15 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - OLLAMA_HOST=http://ollama_test:11434
+      - OLLAMA_HOST=http://ollama:11434
       - FLASK_APP=app.py
       - FLASK_ENV=development
     networks:
       - myflask-app-network
 
   front-end:
-    image: front-end:latest
-    container_name: front-end
+    image: tarakdhieb7/fis_localai_frontend:latest
+    container_name: fis_localai_frontend
     build:
       context: ./front-end
       dockerfile: Dockerfile
