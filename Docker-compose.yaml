@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  ollama_test:
+  ollama:
     image: ollama/ollama:latest
-    container_name: ollama_test
+    container_name: ollama
     build:
       context: .
       dockerfile: Dockerfile.ollama
@@ -28,7 +28,7 @@ services:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      - ollama_test
+      - ollama
     ports:
       - "5000:5000"
     environment:
@@ -38,9 +38,9 @@ services:
     networks:
       - myflask-app-network
 
-  front-end-test:
+  front-end:
     image: front-end:latest
-    container_name: front-end-test
+    container_name: front-end
     build:
       context: ./front-end
       dockerfile: Dockerfile
