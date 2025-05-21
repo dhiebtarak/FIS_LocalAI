@@ -11,7 +11,7 @@ import { ModelService } from '../../services/model.service';
   template: `
     <div class="navbar">
       <div class="left-nav">
-        <div class="avatar">R1</div>
+        <div class="avatar">FIS</div>
         <h2>Local AI Chat</h2>
       </div>
       <div class="right-nav">

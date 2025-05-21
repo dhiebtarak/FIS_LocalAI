@@ -65,7 +65,7 @@ export class ChatService {
     const timeoutId = setTimeout(() => {
       controller.abort();
       this.updateAssistantMessage(assistantMessageId, 'Error: Request timed out');
-    }, 30000); // 30-second timeout
+    }, 60000); // 30-second timeout
 
     try {
       const response = await fetch(`${this.backendUrl}/stream_chat`, {

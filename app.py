@@ -14,7 +14,7 @@ class Config:
     
     # Ollama settings
     OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434")
-    DEFAULT_MODEL = "tinyllama:latest"
+    DEFAULT_MODEL = "Clearing-workflow"
     ALLOWED_MODELS = None  # Will be populated after checking available models
     
     # Server configuration
@@ -103,6 +103,8 @@ def index():
 @app.route("/stream_chat", methods=["POST"])
 def stream_chat():
     # Extract prompt and model from the request
+    Config.ALLOWED_MODELS = get_available_models()
+    logger.info(f"Allowed models: {Config.ALLOWED_MODELS}")
     data = request.get_json()
     if not data or 'prompt' not in data or 'model' not in data:
         logger.error("Invalid request: prompt and model are required")
@@ -110,7 +112,7 @@ def stream_chat():
 
     prompt = data['prompt']
     model = data['model']
-    logger.debug(f"Streaming chat with model: {model}, prompt: {prompt}")
+    logger.info(f"Streaming chat with model: {model}, prompt: {prompt}")
 
     # Validate model
     if model not in Config.ALLOWED_MODELS:

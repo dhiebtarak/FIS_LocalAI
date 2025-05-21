@@ -1,3 +1,4 @@
+
 # FIS_LocalAI
 
 A Flask-based web application with an Angular front-end interface for interacting with local AI models (LLMs) using Ollama for model serving. This project is in Alpha phase and open to contributions. Created by [@dhiebtarak].
@@ -10,6 +11,7 @@ A Flask-based web application with an Angular front-end interface for interactin
   - [Step 1: Clone the Repository](#step-1-clone-the-repository)
   - [Step 2: Install Docker and Docker Compose](#step-2-install-docker-and-docker-compose)
   - [Step 3: Build and Run with Docker Compose](#step-3-build-and-run-with-docker-compose)
+- [Model Download and Customization](#model-download-and-customization)
 - [Application User Guide](#application-user-guide)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
@@ -48,10 +50,8 @@ git clone https://github.com/your-username/FIS_LocalAI.git
 cd FIS_LocalAI
 ```
 
-Replace `your-username` with the actual GitHub username hosting the repository.
-
 **Alternative:** If you don’t have Git installed, download the ZIP file from GitHub:
-- Visit `https://github.com/your-username/FIS_LocalAI`.
+- Visit `https://github.com/dhiebtarak/FIS_LocalAI`.
 - Click the green "Code" button and select "Download ZIP".
 - Extract the ZIP file and navigate to the `FIS_LocalAI` directory.
 
@@ -80,7 +80,7 @@ Build and start the application using Docker Compose:
 From the `FIS_LocalAI` directory, run:
 
 ```bash
-docker-compose up -d
+docker-compose up --build
 ```
 
 This builds and starts the `ollama`, `backend`, and `front-end` services.
@@ -102,6 +102,38 @@ To stop the services, press `Ctrl+C` in the terminal, then run:
 ```bash
 docker-compose down
 ```
+
+## Model Download and Customization
+
+FIS_LocalAI is designed to automatically handle model setup during deployment:
+
+- **Automatic Model Download:**  
+  When running the application for the first time, the default model (`Clearing-workflow`) will be automatically downloaded into a Docker volume. This means you don't need to manually download or store the model files locally.
+
+- **Ollama Service Creation:**  
+  Once the model is downloaded, the Ollama container will be automatically set up to serve the model as a local API endpoint, making it available for the front-end interface.
+
+- **Custom Fine-Tuned Model from Hugging Face:**  
+  If you want to use a different fine-tuned model from Hugging Face, simply modify the following environment variables in the `startup.sh` file:
+
+  ```bash
+  MODEL_REPO="dhieb/FIS_TinyLLama_GGUF"
+  TOKEN="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"
+  MODEL_NAME="Clearing-workflow"
+  ```
+
+  - `MODEL_REPO`: The repository name on Hugging Face containing the model GGUF file.
+  - `TOKEN`: Your Hugging Face access token (required for private repositories).
+  - `MODEL_NAME`: The internal name used to register the model with Ollama.
+
+After updating the values in `startup.sh`, simply restart the application using:
+
+```bash
+docker-compose down
+docker-compose up --build
+```
+
+This will trigger the download and setup of the new model.
 
 ## Application User Guide
 

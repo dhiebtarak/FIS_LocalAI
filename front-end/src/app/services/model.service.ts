@@ -7,7 +7,7 @@ import { map, tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ModelService {
-  private modelSubject = new BehaviorSubject<string>('tinyllama:latest');
+  private modelSubject = new BehaviorSubject<string>('Clearing-workflow');
   currentModel$ = this.modelSubject.asObservable();
   
   private availableModelsSubject = new BehaviorSubject<string[]>([]);
@@ -47,7 +47,7 @@ export class ModelService {
           console.error('Failed to fetch models:', error);
           // Fallback to default models if API fails
           const fallbackModels = [
-            'tinyllama:latest',
+            'Clearing-workflow',
             'llama3:8b',
             'gemma:7b',
             'mixtral:8x7b'

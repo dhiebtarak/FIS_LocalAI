@@ -10,8 +10,8 @@ import { ModelService } from '../../services/model.service';
   imports: [CommonModule, FormsModule],
   template: `
     <div class="input-area">
-      <!-- Dual input for TinyLlama -->
-      <div class="input-template" *ngIf="isTinyLlamaModel" id="dualInputTemplate">
+      <!-- Dual input for clearing-workflow -->
+      <div class="input-template" *ngIf="isclearingworkflowModel" id="dualInputTemplate">
         <div class="dual-input-container">
           <textarea 
             #ccpInput
@@ -27,7 +27,7 @@ import { ModelService } from '../../services/model.service';
       </div>
       
       <!-- Single input for other models -->
-      <div class="input-template" *ngIf="!isTinyLlamaModel" id="singleInputTemplate">
+      <div class="input-template" *ngIf="!isclearingworkflowModel" id="singleInputTemplate">
         <textarea 
           #singleInput
           [(ngModel)]="singleMessage" 
@@ -113,7 +113,7 @@ export class InputAreaComponent implements OnInit {
   ccpMessage = '';
   operationMessage = '';
   singleMessage = '';
-  isTinyLlamaModel = false;
+  isclearingworkflowModel = false;
 
   constructor(
     private chatService: ChatService,
@@ -122,16 +122,16 @@ export class InputAreaComponent implements OnInit {
 
   ngOnInit() {
     this.modelService.currentModel$.subscribe(model => {
-      this.isTinyLlamaModel = model === 'tinyllama:latest';
+      this.isclearingworkflowModel = model === 'Clearing-workflow:latest';
       // Focus the appropriate input after rendering
       setTimeout(() => this.focusInput(), 0);
     });
   }
 
   focusInput() {
-    if (this.isTinyLlamaModel && this.ccpInputRef) {
+    if (this.isclearingworkflowModel && this.ccpInputRef) {
       this.ccpInputRef.nativeElement.focus();
-    } else if (!this.isTinyLlamaModel && this.singleInputRef) {
+    } else if (!this.isclearingworkflowModel && this.singleInputRef) {
       this.singleInputRef.nativeElement.focus();
     }
   }
@@ -147,7 +147,7 @@ export class InputAreaComponent implements OnInit {
   sendMessage() {
     let prompt = '';
 
-    if (this.isTinyLlamaModel) {
+    if (this.isclearingworkflowModel) {
       const ccpMessage = this.ccpMessage.trim();
       const operationMessage = this.operationMessage.trim();
       if (!ccpMessage && !operationMessage) return;

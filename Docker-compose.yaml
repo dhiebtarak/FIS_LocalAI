@@ -5,14 +5,16 @@ services:
     image: ollama/ollama:latest
     container_name: ollama
     build:
-      context: .
-      dockerfile: Dockerfile.ollama
+      context: ./ollama
+      dockerfile: Dockerfile
     ports:
       - "11434:11434"
     volumes:
-      - tinyllama_volume:/root/.ollama
+      - tinyllama_volume_test:/root/.ollama
     networks:
       - myflask-app-network
+      # This is the GPU configuration for the ollama service
+      # comment this section if you don't want to use GPU
     deploy:
       resources:
         reservations:
@@ -23,7 +25,7 @@ services:
 
   backend:
     image: tarakdhieb7/fis_localai_backend:latest 
-    container_name: fis_localai_backend:latest 
+    container_name: fis-localai-backend
     build:
       context: .
       dockerfile: Dockerfile
@@ -38,9 +40,9 @@ services:
     networks:
       - myflask-app-network
 
-  front-end:
+  front-end: 
     image: tarakdhieb7/fis_localai_frontend:latest
-    container_name: fis_localai_frontend
+    container_name: fis-localai-frontend
     build:
       context: ./front-end
       dockerfile: Dockerfile
@@ -56,8 +58,8 @@ services:
       - myflask-app-network
 
 volumes:
-  tinyllama_volume:
-    name: tinyllama_volume
+  tinyllama_volume_test:
+    name: tinyllama_volume_test
 
 networks:
   myflask-app-network:

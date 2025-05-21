@@ -1,29 +1,61 @@
 #!/bin/bash
 
-# Directory where models are stored
-MODELS_DIR="/root/.ollama"
+MODEL_REPO="dhieb/FIS_TinyLLama_GGUF"
+VOLUME_PATH="/root/.ollama"
+TOKEN="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"
+MODEL_NAME="Clearing-workflow"
 
-# Check if the models directory exists and has subdirectories
-if [ -d "$MODELS_DIR" ]; then
-  # Iterate over each subdirectory in the models directory
-  for model_dir in "$MODELS_DIR"/*; do
-    if [ -d "$model_dir" ]; then
-      model_name=$(basename "$model_dir")
-      modelfile_path="$model_dir/Modelfile"
+# Create the volume directory if it doesn't exist
+mkdir -p "$VOLUME_PATH"
 
-      # Check if Modelfile exists for the model
-      if [ -f "$modelfile_path" ]; then
-        echo "Registering model: $model_name"
-        ollama create "$model_name" -f "$modelfile_path"
-      else
-        echo "No Modelfile found for $model_name, skipping..."
-      fi
-    fi
-  done
-else
-  echo "No models directory found at $MODELS_DIR, starting Ollama without custom models..."
+# Check if volume is mounted
+if ! mountpoint -q "$VOLUME_PATH"; then
+  echo "❌ $VOLUME_PATH is not a mounted volume. Exiting."
+  exit 1
 fi
 
-# Start the Ollama server to serve all registered models
-echo "Starting Ollama server..."
-exec ollama serve
+# Download model files from Hugging Face
+echo "📥 Downloading model from Hugging Face..."
+huggingface-cli download "$MODEL_REPO" \
+    --include "*" \
+    --local-dir "$VOLUME_PATH/models" \
+    --token "$TOKEN" \
+    --cache-dir /tmp/hf_cache
+
+# Check if download was successful
+if [ $? -ne 0 ]; then
+  echo "❌ Failed to download model from Hugging Face."
+  exit 1
+fi
+
+# Check if Modelfile exists
+if [ ! -f "$VOLUME_PATH/models/Modelfile" ]; then
+  echo "❌ Modelfile not found at $VOLUME_PATH/models/Modelfile"
+  exit 1
+fi
+
+# Start Ollama server in background
+echo "🚀 Starting Ollama server..."
+ollama serve &
+
+# Wait for Ollama server to be ready
+echo "⏳ Waiting for Ollama to start..."
+timeout 30s bash -c "until curl -s http://localhost:11434 > /dev/null; do sleep 1; done"
+if [ $? -ne 0 ]; then
+  echo "❌ Ollama server failed to start."
+  exit 1
+fi
+
+# Create the model
+echo "🧠 Creating model with Ollama..."
+ollama create $MODEL_NAME -f "$VOLUME_PATH/models/Modelfile"
+
+# Check if model creation was successful
+if [ $? -ne 0 ]; then
+  echo "❌ Failed to create model."
+  exit 1
+fi
+
+# Keep the container running
+echo "📦 Model created. Container will now stay alive."
+tail -f /dev/null
