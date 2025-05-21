@@ -2,7 +2,8 @@
 
 MODEL_REPO="dhieb/FIS_TinyLLama_GGUF"
 VOLUME_PATH="/root/.ollama"
-TOKEN="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"
+# add you hf token here
+TOKEN=" "
 MODEL_NAME="Clearing-workflow"
 
 # Create the volume directory if it doesn't exist

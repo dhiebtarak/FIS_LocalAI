@@ -118,7 +118,7 @@ FIS_LocalAI is designed to automatically handle model setup during deployment:
 
   ```bash
   MODEL_REPO="dhieb/FIS_TinyLLama_GGUF"
-  TOKEN="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"
+  TOKEN=" "
   MODEL_NAME="Clearing-workflow"
   ```
 
